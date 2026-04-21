@@ -32,6 +32,8 @@ After running the setup script, reload VS Code. The custom prompts will be avail
 2. Paste into `~/.config/Code/User/prompts/` (Linux) or `%APPDATA%\Code\User\prompts\` (Windows)
 3. Reload VS Code
 
+<div style="background-color: #f0f7ff; border: 1px solid #b3d9ff; border-radius: 8px; padding: 20px; margin: 20px 0;">
+
 ## Business Context
 
 This repository includes a business context instructions file (`.github/instructions/business-context-instructions.md`) that guides test creation with product terminology and user workflows.
@@ -72,6 +74,8 @@ Before creating or fixing tests:
    - Use existing helper patterns for terminology
 
 The prompts use this context to generate tests that validate real user value and critical workflows rather than just UI interactions.
+
+</div>
 
 ## Prompts
 
