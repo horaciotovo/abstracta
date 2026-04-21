@@ -32,7 +32,7 @@ After running the setup script, reload VS Code. The custom prompts will be avail
 2. Paste into `~/.config/Code/User/prompts/` (Linux) or `%APPDATA%\Code\User\prompts\` (Windows)
 3. Reload VS Code
 
-<div style="background-color: #f0f7ff; border: 1px solid #b3d9ff; border-radius: 8px; padding: 20px; margin: 20px 0;">
+<div style="background-color: #bbdefb; border: 2px solid #1976d2; border-radius: 8px; padding: 20px; margin: 20px 0;">
 
 ## Business Context
 
