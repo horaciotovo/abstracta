@@ -38,11 +38,10 @@ After running the setup script, reload VS Code. The custom prompts will be avail
 
 This repository includes a business context instructions file (`.github/instructions/business-context-instructions.md`) that guides test creation with product terminology and user workflows.
 
-<div style="background-color: #fff3cd; border-left: 4px solid #ff9800; padding: 15px; margin: 20px 0; border-radius: 4px;">
-  <strong>⚠️ Important: How to Use Business Context</strong>
-</div>
-
-Before creating or fixing tests:
+> [!IMPORTANT]
+> **How to Use Business Context**
+>
+> Before creating or fixing tests:
 
 1. **Review your product's business concepts** — Identify and define:
    - User roles (Admin, Standard user, Viewer, etc.)
