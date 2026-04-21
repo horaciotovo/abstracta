@@ -36,7 +36,9 @@ After running the setup script, reload VS Code. The custom prompts will be avail
 
 This repository includes a business context instructions file (`.github/instructions/business-context-instructions.md`) that guides test creation with product terminology and user workflows.
 
-### How to Use Business Context
+<div style="background-color: #fff3cd; border-left: 4px solid #ff9800; padding: 15px; margin: 20px 0; border-radius: 4px;">
+  <strong>⚠️ Important: How to Use Business Context</strong>
+</div>
 
 Before creating or fixing tests:
 
