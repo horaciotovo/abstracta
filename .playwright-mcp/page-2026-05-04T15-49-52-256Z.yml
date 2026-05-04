@@ -1,0 +1,106 @@
+- generic [ref=e1]:
+  - dialog "Place order" [active] [ref=e68]:
+    - document [ref=e69]:
+      - generic [ref=e70]:
+        - generic [ref=e71]:
+          - heading "Place order" [level=5] [ref=e72]
+          - button "Close" [ref=e73] [cursor=pointer]: ×
+        - generic [ref=e75]:
+          - generic [ref=e76]: "Total: 360"
+          - generic [ref=e77]:
+            - generic [ref=e78]: "Name:"
+            - 'textbox "Total: 360 Name:" [ref=e79]': Guest Buyer
+          - generic [ref=e80]:
+            - generic [ref=e81]: "Country:"
+            - textbox "Country:" [ref=e82]
+          - generic [ref=e83]:
+            - generic [ref=e84]: "City:"
+            - textbox "City:" [ref=e85]
+          - generic [ref=e86]:
+            - generic [ref=e87]: "Credit card:"
+            - textbox "Credit card:" [ref=e88]: Canada
+          - generic [ref=e89]:
+            - generic [ref=e90]: "Month:"
+            - textbox "Month:" [ref=e91]: Toronto9876543210987654
+          - generic [ref=e92]:
+            - generic [ref=e93]: "Year:"
+            - textbox "Year:" [ref=e94]: "062026"
+        - generic [ref=e96]:
+          - button "Close" [ref=e97]
+          - button "Purchase" [ref=e98]
+  - text:             
+  - navigation [ref=e2]:
+    - generic [ref=e3]:
+      - link "PRODUCT STORE" [ref=e4] [cursor=pointer]:
+        - /url: index.html
+        - img [ref=e5]
+        - text: PRODUCT STORE
+      - list [ref=e7]:
+        - listitem [ref=e8]:
+          - link "Home (current)" [ref=e9] [cursor=pointer]:
+            - /url: index.html
+            - text: Home
+            - generic [ref=e10]: (current)
+        - listitem [ref=e11]:
+          - link "Contact" [ref=e12] [cursor=pointer]:
+            - /url: "#"
+        - listitem [ref=e13]:
+          - link "About us" [ref=e14] [cursor=pointer]:
+            - /url: "#"
+        - listitem [ref=e15]:
+          - link "Cart" [ref=e16] [cursor=pointer]:
+            - /url: "#"
+        - listitem [ref=e17]:
+          - link "Log in" [ref=e18] [cursor=pointer]:
+            - /url: "#"
+        - listitem
+        - listitem
+        - listitem [ref=e19]:
+          - link "Sign up" [ref=e20] [cursor=pointer]:
+            - /url: "#"
+  - generic [ref=e22]:
+    - generic [ref=e23]:
+      - heading "Products" [level=2] [ref=e24]
+      - table [ref=e26]:
+        - rowgroup [ref=e27]:
+          - row "Pic Title Price x" [ref=e28]:
+            - columnheader "Pic" [ref=e29]
+            - columnheader "Title" [ref=e30]
+            - columnheader "Price" [ref=e31]
+            - columnheader "x" [ref=e32]
+        - rowgroup [ref=e57]:
+          - row "Samsung galaxy s6 360 Delete" [ref=e58]:
+            - cell [ref=e59]:
+              - img [ref=e60]
+            - cell "Samsung galaxy s6" [ref=e61]
+            - cell "360" [ref=e62]
+            - cell "Delete" [ref=e63]:
+              - link "Delete" [ref=e64] [cursor=pointer]:
+                - /url: "#"
+    - generic [ref=e33]:
+      - heading "Total" [level=2] [ref=e34]
+      - heading "360" [level=3] [ref=e67]
+      - button "Place Order" [ref=e35]
+  - generic [ref=e37]:
+    - generic [ref=e40]:
+      - heading "About Us" [level=4] [ref=e41]
+      - paragraph [ref=e42]: We believe performance needs to be validated at every stage of the software development cycle and our open source compatible, massively scalable platform makes that a reality.
+    - generic [ref=e45]:
+      - heading "Get in Touch" [level=4] [ref=e46]
+      - paragraph [ref=e47]: "Address: 2390 El Camino Real"
+      - paragraph [ref=e48]: "Phone: +440 123456"
+      - paragraph [ref=e49]: "Email: demo@blazemeter.com"
+    - heading "PRODUCT STORE" [level=4] [ref=e53]:
+      - img [ref=e54]
+      - text: PRODUCT STORE
+  - contentinfo [ref=e55]:
+    - paragraph [ref=e56]: Copyright © Product Store
+  - generic [ref=e101]:
+    - heading "Thank you for your purchase!" [level=2] [ref=e107]
+    - paragraph [ref=e108]:
+      - text: "Id: 2582316"
+      - text: "Amount: 360 USD"
+      - text: "Card Number: Canada"
+      - text: "Name: Guest Buyer"
+      - text: "Date: 4/4/2026"
+    - button "OK" [ref=e111]

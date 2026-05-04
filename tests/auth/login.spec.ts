@@ -1,24 +1,27 @@
-import { test, expect } from '@playwright/test';
+// spec: specs/plan.md
+// seed: tests/seed.spec.ts
+
+import { test } from '@playwright/test';
+import { allure } from 'allure-playwright';
 import { LoginPage } from '../pages/LoginPage';
+import { getTestCredentials } from '../utils/config';
 
-test.describe('Sauce Demo Authentication', () => {
-  let loginPage: LoginPage;
+test.describe('User Authentication', () => {
+  test('should login with created credentials and display username on homepage', async ({ page }) => {
+    await allure.epic('User Management');
+    await allure.feature('Authentication');
+    await allure.story('User Login');
+    await allure.severity('critical');
+    await allure.tags('auth', 'login', 'smoke');
+    await allure.owner('automation-team');
+    await allure.testCaseId('TC002');
+    // Load credentials from environment configuration
+    const { username, password } = getTestCredentials();
 
-  test.beforeEach(async ({ page }) => {
-    loginPage = new LoginPage(page);
+    const loginPage = new LoginPage(page);
+
     await loginPage.goto();
-  });
-
-  test('should successfully log in with valid credentials', async ({ page }) => {
-    // Arrange
-    const username = 'standard_user';
-    const password = 'secret_sauce';
-
-    // Act
-    await loginPage.login(username, password);
-
-    // Assert
-    await expect(page).toHaveURL(/.*inventory/);
-    await expect(page.getByText('Swag Labs')).toBeVisible();
+    // Login with the created credentials and verify username is displayed on homepage
+    await loginPage.loginAndVerifyUsername(username, password);
   });
 });

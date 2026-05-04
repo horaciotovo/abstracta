@@ -1,162 +1,198 @@
-# Custom Agents
+## Repository Installation
 
-End-to-end testing with Playwright and custom Copilot Chat prompts.
+### Prerequisites
 
-## Setup
+Ensure you have the following installed on your system:
 
-### Install Copilot Chat Prompts
+- **Node.js** (version 16 or higher) - [Download](https://nodejs.org/)
+- **npm** (comes with Node.js)
 
-This repository includes custom prompts to streamline Playwright test creation. To make them available:
+### Step 2: Install Dependencies
 
-**Windows (PowerShell):**
-
-```powershell
-.\setup-prompts.ps1
-```
-
-**macOS/Linux (Bash):**
+Install all required npm packages:
 
 ```bash
-bash setup-prompts.sh
+npm install
 ```
 
-After running the setup script, reload VS Code. The custom prompts will be available in Copilot Chat with `/` autocomplete:
+This installs:
 
-- `/create-playwright-test` - Generate a new Playwright test for a scenario
-- `/fix-playwright-test` - Debug and fix a failing Playwright test
-- `/stabilize-playwright-test` - Fix flaky or unstable Playwright tests
+- Playwright and browser drivers
+- Allure test reporting tools
+- ESLint for code quality
+- TypeScript and related dependencies
 
-**Manual Setup** (if scripts don't work):
+### Step 3: Configure Environment
 
-1. Copy files from `.vscode/prompts/*.md`
-2. Paste into `~/.config/Code/User/prompts/` (Linux) or `%APPDATA%\Code\User\prompts\` (Windows)
-3. Reload VS Code
+Copy the example environment file and configure for your environment:
+
+```bash
+# The repository includes pre-configured environment files:
+# - .env.qa (QA environment)
+# - .env.stg (Staging environment)
+```
+
+For local testing, create a `.env.local` file to override defaults:
+
+```bash
+# .env.local
+ENVIRONMENT=qa
+BASE_URL=https://your-qa-environment.com
+TEST_USERNAME=your-test-username
+TEST_PASSWORD=your-test-password
+HEADLESS=false
+```
+
+For environment configuration details, see [ENV_SETUP.md](ENV_SETUP.md).
+
+## Test Execution
+
+### Run Tests for QA Environment
+
+Execute all tests against the QA environment:
+
+```bash
+npm run test:qa
+```
+
+This command:
+
+- Sets `ENVIRONMENT=qa`
+- Runs Playwright tests with Chromium browser
+- Generates test results with Allure integration
+- Creates detailed reports in `allure-results/` directory
+
+### Run Tests for STG Environment
+
+Execute all tests against the Staging environment:
+
+```bash
+npm run test:stg
+```
+
+This command:
+
+- Sets `ENVIRONMENT=stg`
+- Runs Playwright tests with Chromium browser
+- Generates test results with Allure integration
+- Creates detailed reports in `allure-results/` directory
+
+### Run Tests Locally (Development)
+
+For local development and debugging:
+
+```bash
+# Run tests in headed mode (see browser)
+npm run test
+```
+
+This uses the default QA environment and runs Playwright in headed mode.
+
+### Run Specific Test Suites
+
+Run tests from a specific folder or file:
+
+```bash
+# Run only authentication tests
+npx playwright test tests/auth/
+
+# Run only a specific test file
+npx playwright test tests/auth/login.spec.ts
+
+# Run tests matching a pattern
+npx playwright test --grep "login"
+```
+
+````
+
+For more options, see [Playwright CLI documentation](https://playwright.dev/docs/test-cli).
+
+### View Available Test Cases
+
+See [TEST_CASES.md](TEST_CASES.md) for a comprehensive list of all test cases, specifications, and expected results.
+
+## Allure Report Generation
+
+### Generate Allure Report
+
+After running tests, generate a comprehensive Allure report:
+
+```bash
+npm run allure:generate
+````
+
+This command:
+
+- Processes test results from `allure-results/` directory
+- Generates static HTML report in `allure-report/` directory
+- Includes test statistics, timelines, and detailed failure analysis
+- Cleans previous reports and creates fresh output
+
+### View Allure Report in Browser
+
+Serve the generated Allure report and open it in your browser:
+
+```bash
+npm run allure:report
+```
+
+This command:
+
+- Serves the Allure report on a local server
+- Automatically opens the report in your default browser
+- Provides interactive exploration of test results
+
+The report includes:
+
+- **Overview** - Test execution summary, pass/fail rates, duration
+- **Test Cases** - Detailed results for each test with failure reasons
+- **Trends** - Historical data on test performance and stability
+- **Categories** - Test failures grouped by type
+- **Timeline** - Chronological view of test execution
+
+### Full QA Test Cycle
+
+Complete workflow for running tests and generating reports:
+
+**For QA Environment:**
+
+```bash
+# Run all tests
+npm run test:qa
+
+# Generate report
+npm run allure:generate
+
+# View report in browser
+npm run allure:report
+```
+
+**For STG Environment:**
+
+```bash
+# Run all tests
+npm run test:stg
+
+# Generate report
+npm run allure:generate
+
+# View report in browser
+npm run allure:report
+```
+
+### Clean Up Test Results
+
+To remove old test results and start fresh:
+
+```bash
+# Remove test results
+rm -r allure-results/
+
+# Or on Windows PowerShell
+Remove-Item -Recurse allure-results/
+```
 
 <div style="background-color: #bbdefb; border: 2px solid #1976d2; border-radius: 8px; padding: 20px; margin: 20px 0;">
-
-## Business Context
-
-This repository includes a business context instructions file (`.github/instructions/business-context-instructions.md`) that guides test creation with product terminology and user workflows.
-
-> [!IMPORTANT]
-> **How to Use Business Context**
->
-> Before creating or fixing tests:
-
-1. **Review your product's business concepts** — Identify and define:
-   - User roles (Admin, Standard user, Viewer, etc.)
-   - Core entities (Tenant/Organization, Workspace/Project, etc.)
-   - Permission boundaries
-
-2. **Identify the test scenario** — For each test, determine:
-   - What user role is involved?
-   - What business outcome should be validated?
-   - Is this a critical-path flow or a low-risk convenience feature?
-
-3. **Choose high-priority scenarios** to test first:
-   - Authentication and session continuity
-   - Authorization and permission boundaries
-   - User invitations and role management
-   - Creation, editing, and deletion of core business entities
-   - Approval, review, or publish workflows
-   - Error handling for failed actions
-
-4. **Validate business outcomes**, not UI mechanics:
-   - Use your product's business language in test names and assertions
-   - For permissions, test both allowed and denied behavior
-   - For destructive actions, confirm both success and post-action state
-   - For workflows, assert meaningful state transitions
-
-5. **When business context is unclear** in your tests:
-   - Infer it from neighboring tests and page objects
-   - Check route names and fixture setup
-   - Use existing helper patterns for terminology
-
-The prompts use this context to generate tests that validate real user value and critical workflows rather than just UI interactions.
-
-</div>
-
-## Prompts
-
-### Create Playwright Test
-
-Generate a new Playwright test following repository standards and business context.
-
-**Usage:** `/create-playwright-test`
-
-**When to use:** When you need to write a new test for a user scenario or feature.
-
-**Inputs:** Scenario description for the test
-
-**Output:**
-
-- Page object class with all selectors and interactions
-- New test code using the page object
-- Business outcome explanation
-- Assumptions made
-
-**What it does:**
-
-- Inspects nearby tests, fixtures, helpers, and page objects for patterns and reuse
-- Enforces stable locators (`getByTestId`, `getByRole`, `getByLabel`)
-- Ensures deterministic setup and avoids brittle selectors
-- Reuses existing page objects rather than duplicating logic
-- Applies repository standards and Playwright best practices
-
----
-
-### Fix Playwright Test
-
-Debug and fix a failing Playwright test by identifying the root cause and applying a minimal fix.
-
-**Usage:** `/fix-playwright-test`
-
-**When to use:** When you have a test that's failing and need to determine the cause and fix it.
-
-**Inputs:** Failure details (error message, test output, or description)
-
-**Output:**
-
-- Likely root cause analysis
-- Minimal code change applied
-- Test execution result (PASSED/FAILED)
-- Explanation of why the fix resolved the issue
-
-**What it does:**
-
-- Analyzes failure context and identifies the root cause (selector drift, timing, test data, environment, or product regression)
-- Inspects the failing test, related helpers, page objects, and similar tests
-- Makes the smallest safe fix without adding arbitrary waits
-- Avoids weakening assertions unless the original expectation is incorrect
-- Verifies the fix by running the test and confirms it passes
-- Identifies if the failure indicates a product bug
-
----
-
-### Stabilize Playwright Test
-
-Fix flaky or unstable Playwright tests by addressing the underlying cause of intermittent failures.
-
-**Usage:** `/stabilize-playwright-test`
-
-**When to use:** When a test passes sometimes but fails other times, or fails intermittently in CI.
-
-**Inputs:** Context about the flakiness (recent failure logs, test code, observations)
-
-**Output:**
-
-- Likely source of flakiness
-- Code change to resolve the instability
-- Explanation of why the new approach is more deterministic
-- Assessment of whether the instability may originate from the application itself
-
-**What it does:**
-
-- Inspects recent failures, timing assumptions, and selector stability
-- Solves the actual race condition or unstable locator rather than patching with retries
-- Reuses existing helpers for waiting on meaningful state changes
-- Avoids adding broad retries or fixed delays unless required by suite policy
-- Keeps the test intent unchanged while making it more reliable
 
 ## Code Quality
 
@@ -185,3 +221,143 @@ ESLint is configured to enforce:
 - Consistent naming conventions and code style
 
 Run linting as part of your local development workflow and ensure all tests pass before submitting pull requests.
+
+## Parallelization Applied
+
+This repository implements a comprehensive multi-level parallelization strategy to optimize test execution performance and resource efficiency.
+
+### Strategy Overview
+
+**1. Full Test Parallelization**
+
+- `fullyParallel: true` - All tests run in parallel by default across multiple workers
+- Tests are distributed automatically across available CPU cores for faster execution
+- Each test file runs independently without blocking others
+
+**2. Worker Pool Management**
+
+- **Both Local and CI Environments**: `workers: 2` - Uses 2 concurrent workers for efficient parallel test execution across all environments
+- Balances performance with resource utilization to ensure tests complete quickly without overwhelming system resources
+
+**3. Retry Strategy**
+
+- **Local Development**: No retries (`retries: 0`) - Immediate feedback for faster debugging and development iteration
+- **CI Environment**: 2 retries (`retries: 2`) - Transient failures are automatically retried to improve CI stability and reduce flaky test noise
+
+**4. Browser Project Parallelization**
+The configuration supports running tests across multiple browsers simultaneously:
+
+- **Chromium** - Primary browser for testing modern web applications
+- **Firefox** - Alternative browser for cross-browser validation
+- **WebKit** - Safari compatibility testing
+
+Each browser project runs in parallel when configured, allowing comprehensive cross-browser coverage without sequential overhead.
+
+**5. Trace and Media Management**
+To support efficient parallel execution and minimize resource overhead:
+
+- `trace: 'retain-on-failure'` - Captures detailed execution traces only when tests fail, reducing storage overhead
+- `video: 'retain-on-failure'` - Records video only for failed tests to aid in debugging
+- `screenshot: 'only-on-failure'` - Captures screenshots only on failure to minimize disk I/O during parallel test runs
+
+### Performance Benefits
+
+- **Faster Local Development**: 2-worker parallelization reduces test suite execution time efficiently compared to serial execution
+- **CI/CD Performance**: 2-worker configuration maintains performance while ensuring reproducible results in CI environments
+- **Cross-Browser Coverage**: Parallel project execution enables comprehensive browser testing without sequential overhead
+- **Optimized Resource Usage**: Failure-based trace and media collection reduces storage and memory requirements during parallel execution
+
+###
+
+Shards were not applied due to the amount of test are not significant to implement it.
+
+### Running Parallel Tests
+
+All test commands automatically use the parallelization configuration:
+
+```bash
+# Runs with 2 workers locally
+npm run test
+
+# Runs with 2 workers locally (QA environment)
+npm run test:qa
+
+# Runs with 2 workers locally (STG environment)
+npm run test:stg
+
+# In CI, automatically uses 2 workers with 2 retries
+# (triggered by CI environment variable detection)
+```
+
+For detailed configuration, see [playwright.config.ts](playwright.config.ts).
+
+## Parallelization Benefits for Multibrowsers
+
+The following table compares test execution performance across different parallelization configurations when running tests across all three browsers (Chromium, Firefox, and WebKit):
+
+| Metric                   | 1 Worker (Sequential)                | 2 Workers (Parallel)                | 3 Workers (Parallel)                | Best Performance     |
+| ------------------------ | ------------------------------------ | ----------------------------------- | ----------------------------------- | -------------------- |
+| **Configuration**        | `fullyParallel: false`, `workers: 1` | `fullyParallel: true`, `workers: 2` | `fullyParallel: true`, `workers: 3` | 2 Workers            |
+| **Total Execution Time** | 3.0 minutes (180s)                   | 2.3 minutes (138s)                  | 2.5 minutes (150s)                  | **2.3m** ⚡          |
+| **Tests Passed**         | 23                                   | 22                                  | 15                                  | —                    |
+| **Tests Failed**         | 1                                    | 2                                   | 9                                   | —                    |
+| **Browsers Tested**      | Chromium, Firefox, WebKit            | Chromium, Firefox, WebKit           | Chromium, Firefox, WebKit           | —                    |
+| **Concurrency Level**    | Sequential (1x)                      | 2x Parallel                         | 3x Parallel                         | **2x optimal** 🎯    |
+| **Time vs Sequential**   | Baseline                             | -23% (42s saved)                    | -17% (30s saved)                    | **42 seconds saved** |
+| **Throughput**           | ~7-8s/test                           | ~5-6s/test                          | ~10s/test\*                         | —                    |
+
+### Performance Comparison
+
+#### Time Reduction
+
+- **2 Workers vs Sequential**: 23.3% faster (saves 42 seconds)
+- **3 Workers vs Sequential**: 16.7% faster (saves 30 seconds)
+- **2 Workers vs 3 Workers**: 8% faster (saves 12 seconds)
+
+#### Scalability Analysis
+
+- **1→2 Workers**: 42 second improvement with stable test results ✅
+- **2→3 Workers**: Performance regression observed - increased failures and timing issues ⚠️
+- **Optimal Configuration**: 2 workers provides best balance of speed and stability
+- **Note**: 3-worker configuration shows instability with resource contention causing timing-related test failures
+
+### Key Insights
+
+- **23.3% Time Reduction (Recommended)**: 2-worker configuration reduces execution time from 3.0 to 2.3 minutes with high stability (22 passed, 2 failed)
+- **Parallel Efficiency with 2 Workers**: Optimal sweet spot for this test suite - maintains reliability while achieving significant speed gains
+- **3-Worker Limitations**: While theoretically faster, 3 workers introduces resource contention causing:
+  - 9 test failures (vs 2 with 2 workers)
+  - Increased execution time to 2.5 minutes
+  - Timing-sensitive test failures (navigation delays, element visibility timeouts)
+- **Daily Impact (10 runs/day)**:
+  - 2 Workers: Saves ~7 minutes daily with reliable results
+  - 3 Workers: Creates instability with frequent test flakiness
+- **CI/CD Benefits**: 2-worker configuration provides reliable automation without excessive resource overhead
+- **Resource Tradeoff**: 2 workers uses minimal resources while maintaining excellent performance and test stability
+
+### Performance Methodology
+
+Results were captured by:
+
+1. Running the complete test suite with `fullyParallel: false` and `workers: 1` (sequential baseline)
+2. Running the complete test suite with `fullyParallel: true` and `workers: 2` (2x parallelization)
+3. Running the complete test suite with `fullyParallel: true` and `workers: 3` (3x parallelization with latest code changes)
+4. Recording total execution times, test outcomes, and calculating improvement percentages
+
+### Recommendation
+
+**Use 2 workers for optimal performance and stability** - The 2-worker configuration provides the best balance of execution speed (2.3 minutes, 23% faster than sequential) while maintaining high test reliability (22 passed, 2 failed). While 3 workers was initially faster in previous runs, the latest code changes have introduced timing-sensitive issues that cause resource contention and increased test failures at higher worker counts.
+
+**Findings**
+
+With the latest code changes, performance issues were detected when using 3 workers:
+
+- **9 test failures** at 3-worker concurrency (vs 2 at 2 workers)
+- **Navigation delays**: After clicking login button, redirect to profile page takes longer than expected
+- **Element visibility timeout**: Welcome link not displayed within 5000ms threshold
+- **Cart reload lag**: Cart list reload after deleting a product takes more time, causing test timeouts
+- **Resource contention**: High concurrency (3 workers) exacerbates timing-sensitive issues in the application
+
+**Recommendation**: Use 2-worker configuration with latest changes until application-level timing issues are resolved.
+
+
