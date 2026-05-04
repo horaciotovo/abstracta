@@ -25,31 +25,67 @@ jobs:
       run: npx playwright install --with-deps
     - name: Run Playwright tests
       run: npx playwright test
-    - name: Setup Java for Allure
+    - name: Setup Java
       if: always()
       uses: actions/setup-java@v4
       with:
         distribution: 'temurin'
-        java-version: '21'
+        java-version: '17'
+    - name: Download and Setup Allure
+      if: always()
+      run: |
+        curl -L -o allure.tgz https://github.com/allure-framework/allure2/releases/download/2.27.0/allure-2.27.0.tgz
+        tar -xzf allure.tgz
+        export PATH="$PWD/allure-2.27.0/bin:$PATH"
+        echo "PATH=$PWD/allure-2.27.0/bin:$PATH" >> $GITHUB_ENV
+        allure --version
+    - name: Restore Allure History
+      if: always()
+      run: |
+        mkdir -p allure-results/history
+        echo "History directory prepared"
     - name: Generate Allure Report
       if: always()
-      run: npx allure generate allure-results -o allure-report --clean 2>&1 || echo "Allure generation failed, but continuing..."
+      run: |
+        echo "Generating Allure report from results..."
+        allure generate allure-results -o allure-report --clean
+        if [ -f "allure-report/index.html" ]; then
+          echo "✓ Allure report generated successfully"
+          ls -lh allure-report/
+        else
+          echo "✗ Failed to generate allure report"
+          ls -la allure-report/ || echo "Directory not found"
+        fi
     - name: Upload artifacts
       if: always()
       uses: actions/upload-artifact@v4
       with:
-        name: test-results
+        name: test-reports
         path: |
           playwright-report/
           allure-report/
         retention-days: 30
-    - name: Publish reports to GitHub Pages
+    - name: Verify Report Generated
       if: always()
-      uses: peaceiris/actions-gh-pages@v3
-      with:
-        github_token: ${{ secrets.GITHUB_TOKEN }}
-        publish_dir: .
-        keep_files: true
+      run: |
+        echo "=== Playwright Report ===" 
+        if [ -f "playwright-report/index.html" ]; then
+          echo "✓ Playwright report found"
+          du -sh playwright-report/
+        else
+          echo "✗ Playwright report NOT found"
+        fi
+        echo ""
+        echo "=== Allure Report ==="
+        if [ -f "allure-report/index.html" ]; then
+          echo "✓ Allure report found"
+          du -sh allure-report/
+          head -20 allure-report/index.html
+        else
+          echo "✗ Allure report NOT found"
+          echo "Directory contents:"
+          ls -la allure-report/ || echo "Directory not found"
+        fi
     - name: Add summary
       if: always()
       run: |
@@ -57,12 +93,23 @@ jobs:
         RUN_ID="${{ github.run_id }}"
         RUN_NUMBER="${{ github.run_number }}"
         
-        echo "## 📊 Test Results" >> $GITHUB_STEP_SUMMARY
+        echo "## 📊 Test Execution Summary" >> $GITHUB_STEP_SUMMARY
         echo "" >> $GITHUB_STEP_SUMMARY
-        echo "### Reports Generated" >> $GITHUB_STEP_SUMMARY
-        echo "- 📄 **Playwright Report**: Available in [Artifacts](https://github.com/${REPO}/actions/runs/${RUN_ID})" >> $GITHUB_STEP_SUMMARY
-        echo "- 📊 **Allure Report**: Available in [Artifacts](https://github.com/${REPO}/actions/runs/${RUN_ID})" >> $GITHUB_STEP_SUMMARY
+        
+        if [ -f "playwright-report/index.html" ]; then
+          echo "✅ **Playwright Report**: Available in artifacts" >> $GITHUB_STEP_SUMMARY
+        else
+          echo "❌ **Playwright Report**: Not generated" >> $GITHUB_STEP_SUMMARY
+        fi
+        
+        if [ -f "allure-report/index.html" ]; then
+          echo "✅ **Allure Report**: Available in artifacts" >> $GITHUB_STEP_SUMMARY
+        else
+          echo "❌ **Allure Report**: Not generated" >> $GITHUB_STEP_SUMMARY
+        fi
+        
         echo "" >> $GITHUB_STEP_SUMMARY
-        echo "### Run Information" >> $GITHUB_STEP_SUMMARY
-        echo "- Run Number: ${RUN_NUMBER}" >> $GITHUB_STEP_SUMMARY
-        echo "- Repository: ${REPO}" >> $GITHUB_STEP_SUMMARY
+        echo "### 📦 Download Reports" >> $GITHUB_STEP_SUMMARY
+        echo "See [Artifacts](https://github.com/${REPO}/actions/runs/${RUN_ID}) for test reports" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+        echo "**Run**: #${RUN_NUMBER}" >> $GITHUB_STEP_SUMMARY
