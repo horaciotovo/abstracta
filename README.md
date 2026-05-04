@@ -360,4 +360,89 @@ With the latest code changes, performance issues were detected when using 3 work
 
 **Recommendation**: Use 2-worker configuration with latest changes until application-level timing issues are resolved.
 
+## Pipeline CI/CD
 
+### GitHub Actions Automation
+
+A GitHub Actions pipeline is implemented to automate test execution and report generation. The pipeline is configured to trigger automatically on every push to the repository.
+
+**Pipeline Details:**
+
+- **Trigger**: Pipeline executes automatically after each push
+- **Repository**: [abstracta Actions](https://github.com/horaciotovo/abstracta/actions)
+- **Workflow Reports**: Test results and reports are generated and linked in the workflow summary
+
+**Available Reports in Summary:**
+
+The workflow summary provides direct links to:
+
+- **Playwright HTML Report** - Detailed test execution results with timeline and error details
+- **Allure Report** - Comprehensive test metrics, statistics, and historical trend analysis
+
+These reports allow you to quickly review test outcomes, identify failures, and track test quality over time without local setup.
+
+## Executive Report
+
+### Overview
+
+The Executive Report provides a comprehensive analysis and summary of test execution results, designed for both technical and non-technical stakeholders.
+
+### Report Generation Process
+
+The executive summary report is generated using an AI-powered analysis workflow:
+
+1. **Prompt Template** - [executive-summary.prompt.md](executive-report/executive-summary.prompt.md)
+   - Defines the analysis framework and requirements
+   - Specifies structured output format for executive-level findings
+   - Establishes criteria for severity assessment and recommendations
+
+2. **Data Source** - Allure Test Results
+   - Raw test execution data from `allure-results/` directory
+   - Includes test logs, screenshots, timelines, and failure details
+   - Contains comprehensive metadata on test runs and outcomes
+
+3. **Analysis** - AI-Powered Processing
+   - Processes test results against the executive summary template
+   - Identifies patterns, root causes, and trends
+   - Generates actionable recommendations prioritized by impact
+
+4. **Output** - [TEST_EXECUTION_SUMMARY.html](executive-report/TEST_EXECUTION_SUMMARY.html)
+   - Professional HTML report with interactive styling
+   - Includes execution overview, failure analysis, and recommendations
+   - Exported as PDF for distribution to stakeholders
+
+### Report Contents
+
+The Executive Report includes:
+
+- **Execution Overview** - Total tests, pass rates, and overall status
+- **Failed Tests Analysis** - Detailed breakdown of failures with root causes
+- **Detected Patterns** - Common trends and recurring issues
+- **Root Cause Analysis** - Assessment across product, framework, infrastructure, and data dimensions
+- **Actionable Recommendations** - Prioritized actions (Immediate, Preventive, Framework, Pipeline improvements)
+- **Executive Conclusion** - Summary for technical and non-technical stakeholders
+- **Feature-Level Summary** - Test results broken down by application feature
+
+### Accessing the Report
+
+- **HTML Format**: [executive-report/TEST_EXECUTION_SUMMARY.html](executive-report/TEST_EXECUTION_SUMMARY.html)
+- **PDF Format**: Generated and exported from the HTML report for stakeholder distribution
+
+### Workflow Example
+
+```bash
+# 1. Run tests and generate Allure results
+npm run test:qa
+
+# 2. Generate Allure HTML report
+npm run allure:generate
+
+# 3. Execute the prompt analysis on allure-results
+# This processes the results using executive-summary.prompt.md
+# and generates TEST_EXECUTION_SUMMARY.html
+
+# 4. Export as PDF (if needed)
+# The HTML report can be printed/exported to PDF from the browser
+```
+
+This approach ensures stakeholders receive clear, actionable insights into test quality and application stability without requiring technical knowledge of test automation frameworks.
