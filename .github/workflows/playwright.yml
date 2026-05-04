@@ -40,7 +40,6 @@ jobs:
         path: |
           playwright-report/
           allure-report/
-          allure-results/
         retention-days: 30
     - name: Publish reports to GitHub Pages
       if: always()
