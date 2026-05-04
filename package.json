@@ -1,0 +1,31 @@
+{
+  "name": "custom-agents",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "lint": "eslint tests/**/*.ts",
+    "lint:fix": "eslint tests/**/*.ts --fix",
+    "test": "cross-env ENVIRONMENT=qa playwright test",
+    "test:qa": "cross-env ENVIRONMENT=qa playwright test --project=chromium",
+    "test:stg": "cross-env ENVIRONMENT=stg playwright test --project=chromium",
+    "allure:report": "allure serve allure-results",
+    "allure:generate": "allure generate allure-results -o allure-report --clean"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "@playwright/mcp": "^0.0.70",
+    "@playwright/test": "^1.59.1",
+    "allure-playwright": "^3.7.2",
+    "cross-env": "^7.0.3",
+    "@types/node": "^25.6.0",
+    "@typescript-eslint/eslint-plugin": "^8.59.0",
+    "@typescript-eslint/parser": "^8.59.0",
+    "dotenv": "^16.4.5",
+    "eslint": "^10.2.1"
+  }
+}
