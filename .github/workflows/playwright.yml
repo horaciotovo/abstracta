@@ -24,7 +24,7 @@ jobs:
     - name: Install Playwright Browsers
       run: npx playwright install --with-deps
     - name: Run Playwright tests
-      run: npx playwright test --reporter=line,allure-playwright
+      run: npx playwright test --reporter=line,html,allure-playwright
     - name: Setup Java
       if: always()
       uses: actions/setup-java@v4
