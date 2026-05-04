@@ -25,28 +25,39 @@ jobs:
       run: npx playwright test
     - name: Install Allure CLI
       if: ${{ !cancelled() }}
-      run: npm install -g allure-commandline
+      run: |
+        npm install -g allure-commandline
+        npm install -g allure-playwright
     - name: Check Allure Results
       if: ${{ !cancelled() }}
       run: |
         echo "=== Checking allure-results ==="
         if [ -d "allure-results" ]; then
-          echo "Directory exists"
+          echo "✓ allure-results directory exists"
           ls -la allure-results/ | head -20
+          echo "File count: $(ls -1 allure-results/ | wc -l)"
         else
-          echo "Directory not found, creating it"
-          mkdir -p allure-results
+          echo "✗ allure-results directory not found"
         fi
     - name: Generate Allure Report
       if: ${{ !cancelled() }}
       run: |
         if [ -d "allure-results" ] && [ "$(ls -A allure-results/)" ]; then
-          echo "Generating Allure report from results..."
-          allure generate allure-results -o allure-report --clean
+          echo "✓ Generating Allure report from results..."
+          allure generate allure-results -o allure-report --clean 2>&1 || true
+          if [ -f "allure-report/index.html" ]; then
+            echo "✓ Allure report generated successfully"
+            ls -la allure-report/ | head -10
+          else
+            echo "⚠ Allure HTML not generated, checking directory..."
+            if [ -d "allure-report" ]; then
+              ls -la allure-report/
+            fi
+          fi
         else
-          echo "No allure-results found, creating empty report..."
+          echo "✗ No allure-results found, creating empty report..."
           mkdir -p allure-report
-          echo "<html><body><h1>No test results available</h1></body></html>" > allure-report/index.html
+          echo "<html><body><h1>⚠️ No test results available</h1><p>Allure results were not generated during test execution.</p></body></html>" > allure-report/index.html
         fi
     - uses: actions/upload-artifact@v4
       if: ${{ !cancelled() }}
