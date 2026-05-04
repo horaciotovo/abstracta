@@ -36,3 +36,15 @@ jobs:
         github_token: ${{ secrets.GITHUB_TOKEN }}
         publish_dir: ./playwright-report
         destination_dir: test-results/${{ github.run_number }}
+    - name: Add deployment summary
+      if: ${{ !cancelled() }}
+      run: |
+        echo "## 📊 Test Results" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+        echo "✅ Test results have been published to GitHub Pages" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+        echo "📄 **Report Location:** [View Test Report](https://horaciotovo.github.io/abstracta/test-results/${{ github.run_number }})" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+        if [ -f playwright-report/index.html ]; then
+          echo "✓ Playwright report generated" >> $GITHUB_STEP_SUMMARY
+        fi
