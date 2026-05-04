@@ -23,13 +23,15 @@ jobs:
       run: npx playwright install --with-deps
     - name: Run Playwright tests
       run: npx playwright test
-    - name: Install Allure CLI
+    - name: Setup Java for Allure
       if: always()
-      run: npm install -g allure-commandline
+      uses: actions/setup-java@v4
+      with:
+        distribution: 'temurin'
+        java-version: '21'
     - name: Generate Allure Report
       if: always()
-      run: allure generate allure-results -o allure-report --clean
-      continue-on-error: true
+      run: npx allure generate allure-results -o allure-report --clean 2>&1 || echo "Allure generation failed, but continuing..."
     - name: Upload artifacts
       if: always()
       uses: actions/upload-artifact@v4
