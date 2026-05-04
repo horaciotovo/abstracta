@@ -24,7 +24,7 @@ jobs:
     - name: Install Playwright Browsers
       run: npx playwright install --with-deps
     - name: Run Playwright tests
-      run: npx playwright test
+      run: npx playwright test --reporter=line,allure-playwright
     - name: Setup Java
       if: always()
       uses: actions/setup-java@v4
@@ -101,8 +101,9 @@ jobs:
         name: test-reports
         path: |
           playwright-report/
+          allure-results/
           allure-report/
-        retention-days: 30
+        retention-days: 5
     - name: Verify Report Generated
       if: always()
       run: |
@@ -178,10 +179,6 @@ jobs:
       pages: write
       id-token: write
       contents: read
-
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
 
     steps:
       - name: Download artifacts
