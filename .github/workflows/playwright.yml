@@ -36,15 +36,38 @@ jobs:
         github_token: ${{ secrets.GITHUB_TOKEN }}
         publish_dir: ./playwright-report
         destination_dir: test-results/${{ github.run_number }}
+        user_name: 'github-actions[bot]'
+        user_email: 'github-actions[bot]@users.noreply.github.com'
+    - name: Comment on PR with test results
+      if: ${{ github.event_name == 'pull_request' && !cancelled() }}
+      uses: daun/playwright-report-comment@v3
+      with:
+        report_path: playwright-report
     - name: Add deployment summary
       if: ${{ !cancelled() }}
       run: |
-        echo "## 📊 Test Results" >> $GITHUB_STEP_SUMMARY
+        REPO_OWNER="${{ github.repository_owner }}"
+        REPO_NAME="${{ github.event.repository.name }}"
+        GITHUB_PAGES_URL="https://${REPO_OWNER}.github.io/${REPO_NAME}/test-results/${{ github.run_number }}"
+        
+        echo "## 📊 Test Results Summary" >> $GITHUB_STEP_SUMMARY
         echo "" >> $GITHUB_STEP_SUMMARY
-        echo "✅ Test results have been published to GitHub Pages" >> $GITHUB_STEP_SUMMARY
+        echo "✅ Test results have been successfully published!" >> $GITHUB_STEP_SUMMARY
         echo "" >> $GITHUB_STEP_SUMMARY
-        echo "📄 **Report Location:** [View Test Report](https://horaciotovo.github.io/abstracta/test-results/${{ github.run_number }})" >> $GITHUB_STEP_SUMMARY
+        echo "### 📍 Access Your Reports" >> $GITHUB_STEP_SUMMARY
         echo "" >> $GITHUB_STEP_SUMMARY
+        echo "**GitHub Pages Report:**" >> $GITHUB_STEP_SUMMARY
+        echo "[🔗 View Full Test Report](${GITHUB_PAGES_URL})" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+        echo "**Run Artifacts:**" >> $GITHUB_STEP_SUMMARY
+        echo "[📦 View in Run Summary](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }})" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+        echo "### 📋 Deployment Details" >> $GITHUB_STEP_SUMMARY
         if [ -f playwright-report/index.html ]; then
-          echo "✓ Playwright report generated" >> $GITHUB_STEP_SUMMARY
+          echo "✓ Playwright report generated successfully" >> $GITHUB_STEP_SUMMARY
+        else
+          echo "⚠ No Playwright report found" >> $GITHUB_STEP_SUMMARY
         fi
+        echo "- Published to: \`test-results/${{ github.run_number }}\`" >> $GITHUB_STEP_SUMMARY
+        echo "- Branch: \`gh-pages\`" >> $GITHUB_STEP_SUMMARY
+        echo "- Run Number: ${{ github.run_number }}" >> $GITHUB_STEP_SUMMARY
