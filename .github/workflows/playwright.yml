@@ -161,12 +161,8 @@ jobs:
         echo "### 💡 Viewing Allure Report Locally" >> $GITHUB_STEP_SUMMARY
         echo "After downloading and extracting artifacts, serve with HTTP server:" >> $GITHUB_STEP_SUMMARY
         echo "\`\`\`bash" >> $GITHUB_STEP_SUMMARY
-        echo "# Python 3" >> $GITHUB_STEP_SUMMARY
-        echo "cd allure-report && python -m http.server 8000" >> $GITHUB_STEP_SUMMARY
-        echo "# Or Node.js" >> $GITHUB_STEP_SUMMARY
         echo "npx http-server allure-report" >> $GITHUB_STEP_SUMMARY
         echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
-        echo "Then open: http://localhost:8000" >> $GITHUB_STEP_SUMMARY
         echo "" >> $GITHUB_STEP_SUMMARY
         echo "**Run**: #${RUN_NUMBER}" >> $GITHUB_STEP_SUMMARY
 
@@ -199,18 +195,28 @@ jobs:
               <title>Test Reports</title>
               <style>
                 body { font-family: Arial, sans-serif; margin: 40px; background: #f5f5f5; }
-                .container { max-width: 600px; margin: 0 auto; background: white; padding: 30px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+                .container { max-width: 700px; margin: 0 auto; background: white; padding: 30px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
                 h1 { color: #333; border-bottom: 3px solid #0066cc; padding-bottom: 10px; }
+                .info-box { background: #e3f2fd; border-left: 4px solid #0066cc; padding: 15px; margin: 20px 0; border-radius: 4px; }
+                .info-box strong { color: #0066cc; }
                 ul { list-style: none; padding: 0; }
                 li { margin: 15px 0; }
                 a { color: #0066cc; text-decoration: none; font-size: 18px; font-weight: 500; }
                 a:hover { text-decoration: underline; }
                 .icon { margin-right: 8px; }
+                .url-box { background: #f0f0f0; padding: 12px; border-radius: 4px; margin: 10px 0; font-family: monospace; font-size: 14px; word-break: break-all; }
               </style>
             </head>
             <body>
               <div class="container">
                 <h1>📋 Test Reports</h1>
+                
+                <div class="info-box">
+                  <strong>ℹ️ After deployment finishes</strong>, navigate to the GitHub Pages URL to view your test reports:
+                  <div class="url-box">https://horaciotovo.github.io/abstracta/</div>
+                </div>
+                
+                <h2>Available Reports</h2>
                 <ul>
                   <li><a href="./playwright/"><span class="icon">🎭</span> Playwright Report</a></li>
                   <li><a href="./allure/"><span class="icon">📊</span> Allure Report</a></li>
