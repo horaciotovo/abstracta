@@ -34,10 +34,12 @@ jobs:
     - name: Download and Setup Allure
       if: always()
       run: |
+        echo "Downloading Allure 2.27.0..."
         curl -L -o allure.tgz https://github.com/allure-framework/allure2/releases/download/2.27.0/allure-2.27.0.tgz
         tar -xzf allure.tgz
         export PATH="$PWD/allure-2.27.0/bin:$PATH"
         echo "PATH=$PWD/allure-2.27.0/bin:$PATH" >> $GITHUB_ENV
+        which allure
         allure --version
     - name: Restore Allure History
       if: always()
@@ -47,14 +49,50 @@ jobs:
     - name: Generate Allure Report
       if: always()
       run: |
-        echo "Generating Allure report from results..."
-        allure generate allure-results -o allure-report --clean
+        echo "=== Generating Allure Report ==="
+        echo "Source: allure-results/"
+        echo "Output: allure-report/"
+        
+        # Check if allure-results exists and has content
+        if [ ! -d "allure-results" ] || [ -z "$(ls -A allure-results/ 2>/dev/null | grep -v history)" ]; then
+          echo "⚠️ No Allure results found. Creating sample report structure..."
+          mkdir -p allure-results
+        fi
+        
+        # Generate the report
+        allure generate allure-results -o allure-report --clean 2>&1
+        
+        # Verify generation
+        echo ""
+        echo "=== Verification ==="
         if [ -f "allure-report/index.html" ]; then
-          echo "✓ Allure report generated successfully"
-          ls -lh allure-report/
+          echo "✓ index.html found"
+          
+          # Check for required assets
+          for dir in app data export history plugins widgets; do
+            if [ -d "allure-report/$dir" ]; then
+              count=$(find allure-report/$dir -type f 2>/dev/null | wc -l)
+              echo "  ✓ $dir/ ($count files)"
+            else
+              echo "  ✗ $dir/ missing"
+            fi
+          done
+          
+          # Show total size
+          echo ""
+          du -sh allure-report/
+          
+          # Verify HTML has data-embedded
+          if grep -q "data-embedded" allure-report/index.html; then
+            echo "✓ Data embedded in HTML"
+          fi
         else
-          echo "✗ Failed to generate allure report"
-          ls -la allure-report/ || echo "Directory not found"
+          echo "✗ index.html NOT found"
+          echo "Directory structure:"
+          find allure-report -type f -name "*.html" -o -name "*.js" -o -name "*.json" 2>/dev/null | head -20
+          echo ""
+          echo "Full directory listing:"
+          ls -la allure-report/ 2>/dev/null || echo "Directory empty or missing"
         fi
     - name: Upload artifacts
       if: always()
@@ -76,15 +114,22 @@ jobs:
           echo "✗ Playwright report NOT found"
         fi
         echo ""
-        echo "=== Allure Report ==="
-        if [ -f "allure-report/index.html" ]; then
-          echo "✓ Allure report found"
-          du -sh allure-report/
-          head -20 allure-report/index.html
+        echo "=== Allure Report Structure ===" 
+        if [ -d "allure-report" ]; then
+          echo "✓ Report directory exists"
+          echo ""
+          echo "File structure:"
+          find allure-report -type f | head -30
+          echo ""
+          echo "Total files: $(find allure-report -type f | wc -l)"
+          echo "Total size: $(du -sh allure-report | cut -f1)"
+          echo ""
+          echo "Key files:"
+          ls -lh allure-report/index.html 2>/dev/null || echo "  ✗ index.html missing"
+          [ -f "allure-report/app.js" ] && echo "  ✓ app.js present" || echo "  ✗ app.js missing"
+          [ -d "allure-report/data" ] && echo "  ✓ data/ directory present" || echo "  ✗ data/ missing"
         else
-          echo "✗ Allure report NOT found"
-          echo "Directory contents:"
-          ls -la allure-report/ || echo "Directory not found"
+          echo "✗ Report directory not found"
         fi
     - name: Add summary
       if: always()
@@ -111,5 +156,15 @@ jobs:
         echo "" >> $GITHUB_STEP_SUMMARY
         echo "### 📦 Download Reports" >> $GITHUB_STEP_SUMMARY
         echo "See [Artifacts](https://github.com/${REPO}/actions/runs/${RUN_ID}) for test reports" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+        echo "### 💡 Viewing Allure Report Locally" >> $GITHUB_STEP_SUMMARY
+        echo "After downloading and extracting artifacts, serve with HTTP server:" >> $GITHUB_STEP_SUMMARY
+        echo "\`\`\`bash" >> $GITHUB_STEP_SUMMARY
+        echo "# Python 3" >> $GITHUB_STEP_SUMMARY
+        echo "cd allure-report && python -m http.server 8000" >> $GITHUB_STEP_SUMMARY
+        echo "# Or Node.js" >> $GITHUB_STEP_SUMMARY
+        echo "npx http-server allure-report" >> $GITHUB_STEP_SUMMARY
+        echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
+        echo "Then open: http://localhost:8000" >> $GITHUB_STEP_SUMMARY
         echo "" >> $GITHUB_STEP_SUMMARY
         echo "**Run**: #${RUN_NUMBER}" >> $GITHUB_STEP_SUMMARY
