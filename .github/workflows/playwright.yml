@@ -155,16 +155,10 @@ jobs:
         fi
         
         echo "" >> $GITHUB_STEP_SUMMARY
-        echo "### 📦 Download Reports" >> $GITHUB_STEP_SUMMARY
-        echo "See [Artifacts](https://github.com/${REPO}/actions/runs/${RUN_ID}) for test reports" >> $GITHUB_STEP_SUMMARY
-        echo "" >> $GITHUB_STEP_SUMMARY
-        echo "### 💡 Viewing Allure Report Locally" >> $GITHUB_STEP_SUMMARY
-        echo "After downloading and extracting artifacts, serve with HTTP server:" >> $GITHUB_STEP_SUMMARY
-        echo "\`\`\`bash" >> $GITHUB_STEP_SUMMARY
-        echo "npx http-server allure-report" >> $GITHUB_STEP_SUMMARY
-        echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
-        echo "" >> $GITHUB_STEP_SUMMARY
-        echo "**Run**: #${RUN_NUMBER}" >> $GITHUB_STEP_SUMMARY
+        echo "### 🌐 View Reports Online" >> $GITHUB_STEP_SUMMARY
+        echo "After deployment completes, view your test results:" >> $GITHUB_STEP_SUMMARY
+        echo "- 📊 [Allure Report](https://horaciotovo.github.io/abstracta/allure/)" >> $GITHUB_STEP_SUMMARY
+        echo "- 🎭 [Playwright Report](https://horaciotovo.github.io/abstracta/playwright/)" >> $GITHUB_STEP_SUMMARY
 
   deploy:
     needs: test
