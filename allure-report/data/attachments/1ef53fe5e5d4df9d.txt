@@ -1,0 +1,22 @@
+=== Demoblaze Product List (Page 1 & 2) ===
+┌─────────┬───────────────────────┬─────────┬─────────────────────┐
+│ (index) │ name                  │ price   │ href                │
+├─────────┼───────────────────────┼─────────┼─────────────────────┤
+│ 0       │ 'Samsung galaxy s6'   │ '$360'  │ 'prod.html?idp_=1'  │
+│ 1       │ 'Nokia lumia 1520'    │ '$820'  │ 'prod.html?idp_=2'  │
+│ 2       │ 'Nexus 6'             │ '$650'  │ 'prod.html?idp_=3'  │
+│ 3       │ 'Samsung galaxy s7'   │ '$800'  │ 'prod.html?idp_=4'  │
+│ 4       │ 'Iphone 6 32gb'       │ '$790'  │ 'prod.html?idp_=5'  │
+│ 5       │ 'Sony xperia z5'      │ '$320'  │ 'prod.html?idp_=6'  │
+│ 6       │ 'HTC One M9'          │ '$700'  │ 'prod.html?idp_=7'  │
+│ 7       │ 'Sony vaio i5'        │ '$790'  │ 'prod.html?idp_=8'  │
+│ 8       │ 'Sony vaio i7'        │ '$790'  │ 'prod.html?idp_=9'  │
+│ 9       │ 'Apple monitor 24'    │ '$400'  │ 'prod.html?idp_=10' │
+│ 10      │ 'MacBook air'         │ '$700'  │ 'prod.html?idp_=11' │
+│ 11      │ 'Dell i7 8gb'         │ '$700'  │ 'prod.html?idp_=12' │
+│ 12      │ '2017 Dell 15.6 Inch' │ '$700'  │ 'prod.html?idp_=13' │
+│ 13      │ 'ASUS Full HD'        │ '$230'  │ 'prod.html?idp_=14' │
+│ 14      │ 'MacBook Pro'         │ '$1100' │ 'prod.html?idp_=15' │
+└─────────┴───────────────────────┴─────────┴─────────────────────┘
+✓ JSON export saved to: /home/runner/work/abstracta/abstracta/test-results/product-exports/products.json
+✓ Text export saved to: /home/runner/work/abstracta/abstracta/test-results/product-exports/products.txt

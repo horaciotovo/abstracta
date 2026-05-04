@@ -1,0 +1,6 @@
+First product: Samsung galaxy s6 - $360
+Second product: Nokia lumia 1520 - $820
+Products in cart: Nokia lumia 1520, Samsung galaxy s6
+Total before delete: $1180
+Deleting product at index 1: Samsung galaxy s6
+Cart item count before delete: 1, after delete: 1
