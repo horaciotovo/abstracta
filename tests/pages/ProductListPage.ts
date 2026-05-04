@@ -48,6 +48,7 @@ export class ProductListPage {
 
     const products = await this.page.evaluate(() => {
       const productItems = Array.from(
+        // eslint-disable-next-line no-undef
         document.querySelectorAll('div.col-lg-4.col-md-6')
       );
 

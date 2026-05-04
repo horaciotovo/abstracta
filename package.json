@@ -4,6 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "prepare": "husky install",
     "lint": "eslint tests/**/*.ts",
     "lint:fix": "eslint tests/**/*.ts --fix",
     "test": "cross-env ENVIRONMENT=qa playwright test",
@@ -27,6 +28,7 @@
     "allure-playwright": "^3.7.2",
     "cross-env": "^7.0.3",
     "dotenv": "^16.4.5",
-    "eslint": "^10.2.1"
+    "eslint": "^10.2.1",
+    "husky": "^9.1.7"
   }
 }

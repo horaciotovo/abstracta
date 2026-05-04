@@ -7,7 +7,6 @@ import { LoginPage } from '../pages/LoginPage';
 import { ProductListPage } from '../pages/ProductListPage';
 import { ProductDetailPage } from '../pages/ProductDetailPage';
 import { CartPage } from '../pages/CartPage';
-import { getEnvironmentConfig } from '../utils/config';
 
 test.describe('Cart Management', () => {
   test('should add 2 products to cart, verify total, delete one, and verify updated total', async ({
@@ -21,7 +20,6 @@ test.describe('Cart Management', () => {
     await allure.owner('automation-team');
     await allure.testCaseId('TC006');
     // 1. Log in first (authentication might be required for cart operations)
-    const config = getEnvironmentConfig();
     const loginPage = new LoginPage(page);
     await loginPage.goto();
 
@@ -101,6 +99,7 @@ test.describe('Cart Management', () => {
 
     // 11. Get prices of remaining items from the table
     const remainingItems = await page.evaluate(() => {
+      // eslint-disable-next-line no-undef
       const rows = Array.from(document.querySelectorAll('tbody#tbodyid tr'));
       return rows.map((row) => {
         const nameCell = row.querySelectorAll('td')[1];

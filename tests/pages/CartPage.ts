@@ -1,4 +1,4 @@
-import { Locator, Page, expect } from '@playwright/test';
+import { Locator, Page } from '@playwright/test';
 
 /**
  * CartPage represents the shopping cart page of Demoblaze.
@@ -138,7 +138,7 @@ export class CartPage {
           break;
         }
         itemCount = newCount;
-      } catch (error) {
+      } catch {
         // If delete fails, check if cart is already empty
         itemCount = await this.getCartItemCount();
         if (itemCount === 0) {

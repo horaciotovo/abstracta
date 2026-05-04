@@ -18,7 +18,7 @@ test.describe('User Authentication', () => {
     await signUpPage.goto();
   });
 
-  test('should create a new account with random credentials', async ({ page }) => {
+  test('should create a new account with random credentials', async () => {
     await allure.epic('User Management');
     await allure.feature('Authentication');
     await allure.story('User Registration');

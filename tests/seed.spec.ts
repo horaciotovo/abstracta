@@ -1,8 +1,8 @@
-import { test, expect } from '@playwright/test';
+import { test } from '@playwright/test';
 import { allure } from 'allure-playwright';
 
 test.describe('Test Utilities', () => {
-  test('seed', async ({ page }) => {
+  test('seed', async () => {
     await allure.epic('Test Infrastructure');
     await allure.feature('Data Seeding');
     await allure.story('Test Data Setup');
